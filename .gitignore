@@ -1,0 +1,7 @@
+/target
+/Cargo.lock
+
+/.idea/.gitignore
+/.idea/audio_processing.iml
+/.idea/modules.xml
+/.idea/vcs.xml
