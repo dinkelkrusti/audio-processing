@@ -2,7 +2,6 @@ use std::time::Duration;
 
 use cpal::InputCallbackInfo;
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
-use ringbuf::HeapRb;
 
 fn main() -> anyhow::Result<()> {
     let host = cpal::default_host();
@@ -14,15 +13,8 @@ fn main() -> anyhow::Result<()> {
 
     let config: cpal::StreamConfig = input_device.default_input_config()?.into();
 
-    let buffer = HeapRb::<f32>::new(1000);
-    let (mut producer, mut consumer) = buffer.split();
-
     let write_into_buffer = move |data: &[f32], _: &InputCallbackInfo| for sample in data {
         println!("{:?}", &sample);
-        match producer.push(*sample) {
-            Ok(_) => {},
-            Err(_) => { consumer.clear(); }
-        };
     };
 
     let stream = input_device.build_input_stream(
